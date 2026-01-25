@@ -7,8 +7,9 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(typeOrmConfig),
-    UsersModule, 
+    ...(process.env.NODE_ENV === 'test'
+      ? []
+      : [TypeOrmModule.forRoot(typeOrmConfig), UsersModule]),
   ],
   controllers: [AppController],
   providers: [AppService],
