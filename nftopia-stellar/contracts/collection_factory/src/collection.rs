@@ -69,10 +69,10 @@ impl NftCollection {
             .get(&DataKey::TotalSupply)
             .unwrap_or(0);
 
-        if let Some(max) = config.max_supply {
-            if total_supply >= max {
-                return Err(ContractError::SupplyLimitExceeded);
-            }
+        if let Some(max) = config.max_supply
+            && total_supply >= max
+        {
+            return Err(ContractError::SupplyLimitExceeded);
         }
 
         let metadata = TokenMetadata {

@@ -2,7 +2,7 @@ use crate::error::ContractError;
 use crate::events;
 use crate::storage::DataKey;
 use crate::types::{CollectionConfig, CollectionInfo};
-use soroban_sdk::{Address, BytesN, Env, contract, contractimpl, panic_with_error};
+use soroban_sdk::{Address, BytesN, Env, Val, Vec, contract, contractimpl, panic_with_error};
 
 #[contract]
 pub struct CollectionFactory;
@@ -39,11 +39,13 @@ impl CollectionFactory {
             .get(&DataKey::CollectionCount)
             .unwrap_or(0);
 
+        let constructor_args: Vec<Val> = Vec::new(&env);
+
         // Deploy the collection contract
         let collection_address = env
             .deployer()
             .with_address(creator.clone(), salt)
-            .deploy(wasm_hash);
+            .deploy_v2(wasm_hash, constructor_args);
 
         // Initialize the collection
         // We use a cross-contract call to initialize

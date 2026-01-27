@@ -1,6 +1,6 @@
-use soroban_sdk::{Address, Env, contracttype, symbol_short};
+use soroban_sdk::{Address, Env, contractevent};
 
-#[contracttype]
+#[contractevent]
 #[derive(Clone, Debug)]
 pub struct Created {
     pub creator: Address,
@@ -8,7 +8,7 @@ pub struct Created {
     pub id: u32,
 }
 
-#[contracttype]
+#[contractevent]
 #[derive(Clone, Debug)]
 pub struct Mint {
     pub collection: Address,
@@ -17,7 +17,7 @@ pub struct Mint {
     pub amount: u32,
 }
 
-#[contracttype]
+#[contractevent]
 #[derive(Clone, Debug)]
 pub struct Transfer {
     pub collection: Address,
@@ -27,7 +27,7 @@ pub struct Transfer {
     pub amount: u32,
 }
 
-#[contracttype]
+#[contractevent]
 #[derive(Clone, Debug)]
 pub struct Burn {
     pub collection: Address,
@@ -42,26 +42,22 @@ pub fn emit_collection_created(
     collection_address: Address,
     collection_id: u32,
 ) {
-    env.events().publish(
-        (symbol_short!("created"),),
-        Created {
-            creator,
-            collection: collection_address,
-            id: collection_id,
-        },
-    );
+    Created {
+        creator,
+        collection: collection_address,
+        id: collection_id,
+    }
+    .publish(env);
 }
 
 pub fn emit_mint(env: &Env, collection: Address, to: Address, token_id: u32, amount: u32) {
-    env.events().publish(
-        (symbol_short!("mint"),),
-        Mint {
-            collection,
-            to,
-            token_id,
-            amount,
-        },
-    );
+    Mint {
+        collection,
+        to,
+        token_id,
+        amount,
+    }
+    .publish(env);
 }
 
 pub fn emit_transfer(
@@ -72,26 +68,22 @@ pub fn emit_transfer(
     token_id: u32,
     amount: u32,
 ) {
-    env.events().publish(
-        (symbol_short!("transfer"),),
-        Transfer {
-            collection,
-            from,
-            to,
-            token_id,
-            amount,
-        },
-    );
+    Transfer {
+        collection,
+        from,
+        to,
+        token_id,
+        amount,
+    }
+    .publish(env);
 }
 
 pub fn emit_burn(env: &Env, collection: Address, from: Address, token_id: u32, amount: u32) {
-    env.events().publish(
-        (symbol_short!("burn"),),
-        Burn {
-            collection,
-            from,
-            token_id,
-            amount,
-        },
-    );
+    Burn {
+        collection,
+        from,
+        token_id,
+        amount,
+    }
+    .publish(env);
 }
