@@ -16,9 +16,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
+      whitelist: true, // Elimina propiedades no decoradas
+      forbidNonWhitelisted: true, // Lanza error si hay propiedades no permitidas
+      transform: true, // Transforma automáticamente tipos
       transformOptions: {
         enableImplicitConversion: true,
       },
@@ -43,10 +43,13 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
-
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}/api/v1`);
-  console.log(`Swagger documentation available at: http://localhost:${port}/api/docs`);
+  console.log(
+    `Swagger documentation available at: http://localhost:${port}/api/docs`,
+  );
 }
-bootstrap();
+void bootstrap().catch((err) => {
+  console.error('Error during bootstrap', err);
+});
