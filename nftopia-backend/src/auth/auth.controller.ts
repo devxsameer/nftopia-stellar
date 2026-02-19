@@ -10,6 +10,7 @@ export class AuthController {
     if (!publicKey) {
       throw new BadRequestException('Public key is required');
     }
+    // Returns generated challenge
     return this.authService.generateChallenge(publicKey);
   }
 
